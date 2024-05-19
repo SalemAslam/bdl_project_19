@@ -1,0 +1,38 @@
+# Version of the Docker Compose configuration file format (version 3 in this case)
+version: "3"
+
+# Define services to be deployed and managed by Docker Compose
+services:
+
+  # First service named "web1"
+  localhost:
+    # Build the image for this service from the current directory (".")
+    build: .
+    # Expose port 8000 on the host machine to map to port 8000 within the container
+    ports:
+      - "8000:8000"
+    # Use the pre-built image named "fastapi_deployment" for this service
+
+  # # Second service named "web2" with similar configuration to web1
+  # web2:
+  #   build: .
+  #   ports:
+  #     - "8001:8000"
+  #   image: fastapi_deployment
+
+  # # Service for Prometheus monitoring server
+  # prometheus:
+  #   # Use the pre-built image "prom/prometheus" for this service
+  #   image: prom/prometheus
+  #   # Mount the local `prometheus.yml` file as a volume to the `/etc/prometheus/prometheus.yml` path within the container
+  #   volumes:
+  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  #   # Expose port 9090 on the host machine to map to port 9090 within the container (for Prometheus web UI)
+
+  # # Service for Grafana visualization tool
+  # grafana:
+  #   # Use the pre-built image "grafana/grafana" for this service
+  #   image: grafana/grafana
+  #   # Expose port 3001 on the host machine to map to port 3000 within the container (for Grafana web UI)
+  #   ports:
+  #     - "3001:3000"

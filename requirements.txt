@@ -1,0 +1,10 @@
+# Astro Runtime includes the following pre-installed providers packages: https://docs.astronomer.io/astro/runtime-image-architecture#provider-packages
+pyspark==3.3.2
+pandas==1.4.2
+scikit-learn==1.0.2
+kaggle==1.5.12
+flask==2.1.1
+requests==2.27.1
+prometheus-client==0.14.1
+psutil==5.9.0
+mlflow==1.26.0

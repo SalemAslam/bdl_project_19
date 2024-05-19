@@ -1,0 +1,19 @@
+# Global configuration section
+global:
+  # Defines the default scraping interval for all scrape jobs (15 seconds in this case)
+  scrape_interval: 15s
+  # Defines the default timeout for scrape requests (10 seconds in this case)
+  scrape_timeout: 10s
+
+# Scrape configuration section defines jobs for scraping targets
+# cmd command to run prometheus: prometheus --config.file="C:\Users\Salem Aslam\Documents\3. Academics\#Sem8\Lab\Project-19\prometheus.yml"
+
+scrape_configs:
+  # First scrape job configuration
+  - job_name: "restapi"  # Identifies this job as "restapi"
+    scrape_interval: 10s  # Overrides the global default with a 10-second interval
+    scrape_timeout: 10s  # Overrides the global default with a 10-second timeout
+    metrics_path: /metrics  # Defines the path where the target exposes Prometheus metrics
+    static_configs:
+      # Defines static configuration for scraping targets
+      - targets: ["localhost:5000"]  # Specifies the target for this job
