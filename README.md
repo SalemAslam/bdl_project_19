@@ -1,4 +1,4 @@
-# Telco Customer Churn Prediction
+# Telco Customer Churn Prediction ML pipeline
 
 ## Project Overview
 
