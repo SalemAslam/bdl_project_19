@@ -1,48 +1,175 @@
-Overview
-========
+# Telco Customer Churn Prediction
 
-Welcome to Astronomer! This project was generated after you ran 'astro dev init' using the Astronomer CLI. This readme describes the contents of the project, as well as how to run Apache Airflow on your local machine.
+## Project Overview
 
-Project Contents
-================
+This project aims to predict customer churn for a telecommunications company using machine learning. It includes a complete pipeline from data downloading, preprocessing, model training, and deployment of a REST API for predictions. Additionally, it includes monitoring with Prometheus and a machine learning experiment tracking with MLflow.
 
-Your Astro project contains the following files and folders:
+## Directory Structure
 
-- dags: This folder contains the Python files for your Airflow DAGs. By default, this directory includes one example DAG:
-    - `example_astronauts`: This DAG shows a simple ETL pipeline example that queries the list of astronauts currently in space from the Open Notify API and prints a statement for each astronaut. The DAG uses the TaskFlow API to define tasks in Python, and dynamic task mapping to dynamically print a statement for each astronaut. For more on how this DAG works, see our [Getting started tutorial](https://docs.astronomer.io/learn/get-started-with-airflow).
-- Dockerfile: This file contains a versioned Astro Runtime Docker image that provides a differentiated Airflow experience. If you want to execute other commands or overrides at runtime, specify them here.
-- include: This folder contains any additional files that you want to include as part of your project. It is empty by default.
-- packages.txt: Install OS-level packages needed for your project by adding them to this file. It is empty by default.
-- requirements.txt: Install Python packages needed for your project by adding them to this file. It is empty by default.
-- plugins: Add custom or community plugins for your project to this file. It is empty by default.
-- airflow_settings.yaml: Use this local-only file to specify Airflow Connections, Variables, and Pools instead of entering them in the Airflow UI as you develop DAGs in this project.
+```
+├── main_files
+│   ├── app-main.py
+│   ├── app-client.py
+│   ├── decision_tree_model.pkl
+│   ├── json_test_data.json
+│   ├── mlflow.ipynb
+│   ├── prometheus.yml
+│   ├── requirements.txt
+│   ├── Dockerfile
+├── dag
+│   ├── airflow.py
+│   ├── airflow_functions.py
+│   ├── WA_Fn-UseC_-Telco-Customer-Churn.csv
+└── README.md
+```
 
-Deploy Your Project Locally
-===========================
+## Setup and Installation
 
-1. Start Airflow on your local machine by running 'astro dev start'.
+### Prerequisites
 
-This command will spin up 4 Docker containers on your machine, each for a different Airflow component:
+- Python 3.10.4
+- Docker
+- Airflow
+- Prometheus
+- MLflow
+- ApacheSpark
 
-- Postgres: Airflow's Metadata Database
-- Webserver: The Airflow component responsible for rendering the Airflow UI
-- Scheduler: The Airflow component responsible for monitoring and triggering tasks
-- Triggerer: The Airflow component responsible for triggering deferred tasks
+### Clone the Repository
 
-2. Verify that all 4 Docker containers were created by running 'docker ps'.
+```bash
+git clone https://github.com/yourusername/telco-churn-prediction.git
+cd telco-churn-prediction
+```
 
-Note: Running 'astro dev start' will start your project with the Airflow Webserver exposed at port 8080 and Postgres exposed at port 5432. If you already have either of those ports allocated, you can either [stop your existing Docker containers or change the port](https://docs.astronomer.io/astro/test-and-troubleshoot-locally#ports-are-not-available).
+### Install Python Dependencies
 
-3. Access the Airflow UI for your local Airflow project. To do so, go to http://localhost:8080/ and log in with 'admin' for both your Username and Password.
+1. **Install dependencies for the main application:**
 
-You should also be able to access your Postgres Database at 'localhost:5432/postgres'.
+   ```bash
+   cd main_files
+   pip install -r requirements.txt
+   ```
 
-Deploy Your Project to Astronomer
-=================================
+2. **Airflow dependencies:**
 
-If you have an Astronomer account, pushing code to a Deployment on Astronomer is simple. For deploying instructions, refer to Astronomer documentation: https://docs.astronomer.io/cloud/deploy-code/
+   ```bash
+   pip install apache-airflow
+   pip install kaggle
+   ```
 
-Contact
-=======
+### Running the Application
 
-The Astronomer CLI is maintained with love by the Astronomer team. To report a bug or suggest a change, reach out to our support.
+1. **Start the Flask API:**
+
+   If not using Docker, you can run the Flask app directly:
+
+   ```bash
+   cd main_files
+   python app-main.py
+   ```
+
+2. **Send a test prediction request:**
+
+   ```bash
+   cd main_files
+   python app-client.py
+   ```
+
+### MLflow Setup
+
+1. **Run the MLflow notebook:**
+
+   Open `mlflow.ipynb` in Jupyter Notebook or Jupyter Lab and run all the cells to train and log different models. Make sure you have MLflow installed and started:
+
+   Access the MLflow UI at `http://localhost:5000`.
+
+## Reproducing the Results
+
+1. **Data Download and Preprocessing:**
+
+   Use Airflow to download and preprocess the data. Trigger the DAG from the Airflow UI.
+
+2. **Model Training:**
+
+   Use the MLflow notebook `mlflow.ipynb` to train and log the models.
+
+3. **Deploy and Test the API:**
+
+   Deploy the Flask app using Docker or directly on your local machine. Use `app-client.py` to test the API endpoints.
+
+4. **Monitoring:**
+
+   Set up Prometheus to monitor the API metrics as configured in `prometheus.yml`.
+
+## Project Components
+
+### 1. `main_files/`
+- **app-main.py:** The main Flask application file for serving the model and handling requests.
+- **app-client.py:** A client script to test the API by sending sample requests.
+- **decision_tree_model.pkl:** The trained Decision Tree model file.
+- **json_test_data.json:** Sample JSON data for testing the API.
+- **mlflow.ipynb:** Jupyter notebook for training models and logging experiments with MLflow.
+- **prometheus.yml:** Configuration file for Prometheus to monitor the Flask API.
+- **requirements.txt:** Python dependencies for the main application.
+- **Dockerfile:** Docker configuration to containerize the Flask application.
+
+### 2. `dag/`
+- **airflow.py:** Airflow DAG definition for the data preprocessing and model training pipeline.
+- **airflow_functions.py:** Python functions used in the Airflow DAG.
+- **WA_Fn-UseC_-Telco-Customer-Churn.csv:** The dataset used for training and testing.
+
+### Airflow Setup
+
+1. **Initialize Airflow:**
+
+   ```bash
+   airflow db init
+   ```
+
+2. **Create a new DAG file:**
+
+   Copy the `airflow.py` and `airflow_functions.py` files to your Airflow DAGs directory (typically `~/airflow/dags`).
+
+3. **Start the Airflow web server and scheduler:**
+
+   ```bash
+   airflow webserver
+   airflow scheduler
+   ```
+
+4. **Access Airflow UI:**
+
+   Open your browser and go to `http://localhost:8080` to access the Airflow UI. Trigger the `telco_churn_preprocessing` DAG to start the pipeline.
+
+### Prometheus Setup
+
+1. **Run Prometheus:**
+
+   ```bash
+   prometheus --config.file=main_files/prometheus.yml
+   ```
+
+### Docker Setup
+
+1. **Build the Docker image:**
+
+   ```bash
+   cd main_files
+   docker build -t telco-churn-app .
+   ```
+
+2. **Run the Docker container:**
+
+   ```bash
+   docker run -p 5000:5000 telco-churn-app
+   ```
+
+## Notes
+
+- Make sure to set up your Kaggle API credentials before running the Airflow pipeline.
+- Adjust paths and configurations as needed based on your environment.
+- Ensure Docker and all other dependencies are properly installed and running.
+
+## Author
+
+Salem Aslam
